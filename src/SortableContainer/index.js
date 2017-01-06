@@ -101,6 +101,8 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
 			for (let key in this.events) {
 				events[key].forEach(eventName => this.container.removeEventListener(eventName, this.events[key]));
 			}
+
+      console.log('will unmount');
 		}
 
 		handleStart = (e) => {
