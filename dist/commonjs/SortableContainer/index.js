@@ -411,6 +411,8 @@ function sortableContainer(WrappedComponent) {
 				for (var key in this.events) {
 					_loop2(key);
 				}
+
+				console.log('will unmount');
 			}
 		}, {
 			key: 'getEdgeOffset',
