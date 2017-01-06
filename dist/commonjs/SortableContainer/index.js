@@ -219,10 +219,12 @@ function sortableContainer(WrappedComponent) {
 						return _this.listenerNode.addEventListener(eventName, _this.handleSortEnd, false);
 					});
 
-					_this.setState({
-						sorting: true,
-						sortingIndex: index
-					});
+					if (!_this._willUnmount) {
+						_this.setState({
+							sorting: true,
+							sortingIndex: index
+						});
+					}
 
 					if (onSortStart) onSortStart({ node: node, index: index, collection: collection }, e);
 				}
@@ -292,10 +294,12 @@ function sortableContainer(WrappedComponent) {
 				// Update state
 				_this.manager.active = null;
 
-				_this.setState({
-					sorting: false,
-					sortingIndex: null
-				});
+				if (!_this._willUnmount) {
+					_this.setState({
+						sorting: false,
+						sortingIndex: null
+					});
+				}
 
 				_this._touched = false;
 			};
@@ -361,6 +365,7 @@ function sortableContainer(WrappedComponent) {
 			(0, _invariant2.default)(!(props.distance && props.pressDelay), 'Attempted to set both `pressDelay` and `distance` on SortableContainer, you may only use one or the other, not both at the same time.');
 
 			_this.state = {};
+			_this._willUnmount = false;
 			return _this;
 		}
 
@@ -412,7 +417,7 @@ function sortableContainer(WrappedComponent) {
 					_loop2(key);
 				}
 
-				console.log('will unmount');
+				this._willUnmount = true;
 			}
 		}, {
 			key: 'getEdgeOffset',

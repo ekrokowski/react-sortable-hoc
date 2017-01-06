@@ -23,6 +23,7 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
 			);
 
 			this.state = {};
+			this._willUnmount = false;
 		}
 
 		static displayName = provideDisplayName('sortableList', WrappedComponent);
@@ -102,7 +103,7 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
 				events[key].forEach(eventName => this.container.removeEventListener(eventName, this.events[key]));
 			}
 
-      console.log('will unmount');
+      this._willUnmount = true;
 		}
 
 		handleStart = (e) => {
@@ -238,10 +239,12 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
 				events.move.forEach(eventName => this.listenerNode.addEventListener(eventName, this.handleSortMove, false));
 				events.end.forEach(eventName => this.listenerNode.addEventListener(eventName, this.handleSortEnd, false));
 
-				this.setState({
-					sorting: true,
-					sortingIndex: index
-				});
+        if(!this._willUnmount) {
+          this.setState({
+            sorting: true,
+            sortingIndex: index
+          });
+        }
 
 				if (onSortStart) onSortStart({node, index, collection}, e);
 			}
@@ -303,10 +306,12 @@ export default function sortableContainer(WrappedComponent, config = {withRef: f
 			// Update state
 			this.manager.active = null;
 
-			this.setState({
-				sorting: false,
-				sortingIndex: null
-			});
+			if(!this._willUnmount){
+        this.setState({
+          sorting: false,
+          sortingIndex: null
+        });
+			}
 
 			this._touched = false;
 		}
